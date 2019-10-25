@@ -77,10 +77,14 @@ func setAvailableMoves(turn string)  {
 			newX := coordinate[0] + x
 			newY := coordinate[1] + y
 			count := 0
-			for !isOutOfBoard(newX, newY) && BOARD[newX][newY] == revertPlayer(TURN) {
-				newX += x
-				newY += y
-				count++
+			for isOutOfBoard(newX, newY) == false {
+				if BOARD[newX][newY] == revertPlayer(TURN) {
+					newX += x
+					newY += y
+					count++
+				} else {
+					break
+				}
 			}
 			if !isOutOfBoard(newX, newY) && BOARD[newX][newY] == "" && count > 0 {
 				AVAILABLE_MOVES = append(AVAILABLE_MOVES, []int{newX,newY})
@@ -97,10 +101,14 @@ func revertChess(moveX int, moveY int)  {
 		y := direction[1]
 		newX := moveX + x
 		newY := moveY + y
-		for !isOutOfBoard(newX, newY) && BOARD[newX][newY] == revertPlayer(TURN) {
-			revertableChesses = append(revertableChesses, []int{newX, newY})
-			newX += x
-			newY += y
+		for !isOutOfBoard(newX, newY) {
+			if BOARD[newX][newY] == revertPlayer(TURN) {
+				revertableChesses = append(revertableChesses, []int{newX, newY})
+				newX += x
+				newY += y
+			} else {
+				break
+			}
 		}
 		// detect if stop point == TURN && len(revertableChess) > 0 => Revert between chess
 		if !isOutOfBoard(newX, newY) && BOARD[newX][newY] == TURN && len(revertableChesses) > 0 {
